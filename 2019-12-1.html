@@ -105,7 +105,13 @@ const fuels = [
 const getFuel = (x) => Math.floor(x / 3) - 2;
 let totalFuel = 0;
 for (let i = 0; i < fuels.length; i++) {
-	totalFuel += getFuel(fuels[i]);
+	let tempFuel = getFuel(fuels[i]);
+	let totalTempFuel = 0;
+	while (tempFuel > 0) {
+		totalTempFuel += tempFuel;
+		tempFuel = getFuel(tempFuel);
+	}
+	totalFuel += totalTempFuel;
 }
 console.log(totalFuel);
 </script>
