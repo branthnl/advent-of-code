@@ -1,0 +1,31 @@
+<script>
+function isPass(s) {
+	let haveDouble = false;
+	let neverDecrease = true;
+	let tempS = '';
+	for (let i = 0; i < s.length; i++) {
+		if (i < s.length - 1) {
+			if (s[i] === s[i + 1]) {
+				haveDouble = true;
+			}
+		}
+		for (let j = 0; j < tempS.length; j++) {
+			if (Number(s[i]) < Number(tempS[j])) {
+				neverDecrease = false;
+				break;
+			}
+		}
+		tempS += s[i];
+	}
+	return haveDouble && neverDecrease;
+}
+const from = 372304;
+const to = 847060;
+let count = 0;
+for (let i = from; i <= to; i++) {
+	if (isPass('' + i)) {
+		count++;
+	}
+}
+console.log('Possible password: ' + count);
+</script>
