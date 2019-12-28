@@ -1509,8 +1509,45 @@ for (let i = 0; i < orbits.length; i++) {
 	}
 }
 
+// Save YOU and SAN orbits then find a match
+const YOU = places.indexOf('YOU');
+const SAN = places.indexOf('SAN');
+
+let YOUOrbits = [];
+let SANOrbits = [];
+
+let pointer = YOU;
+while (orbits[pointer] != -1) {
+	YOUOrbits.push(orbits[pointer]);
+	pointer = orbits[pointer];
+}
+
+pointer = SAN;
+while (orbits[pointer] != -1) {
+	SANOrbits.push(orbits[pointer]);
+	pointer = orbits[pointer];
+}
+
+let YOUSteps = 0;
+let SANSteps = 0;
+let count = 0;
+for (let i = 0; i < YOUOrbits.length; i++) {
+	for (let j = 0; j < SANOrbits.length; j++) {
+		if (YOUOrbits[i] === SANOrbits[j]) {
+			YOUSteps = i;
+			SANSteps = j;
+			count++;
+			break;
+		}
+	}
+	if (count > 0) {
+		break;
+	}
+}
+
 console.log(places);
 console.log(orbits);
 console.log(orbitsAmount);
 console.log(`Total orbits: ${orbitsAmount.reduce((acc, cur) => acc + cur)}`);
+console.log(`Minimum orbital transfer amount: ${YOUSteps + SANSteps}`);
 </script>
