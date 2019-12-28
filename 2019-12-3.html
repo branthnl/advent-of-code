@@ -66,6 +66,55 @@ for (let i = 0; i < pts[0].length - 1; i++) {
 	}
 }
 
+function overlap(pfrom, pto, ptocheck) {
+	// if horizontal
+	if (pfrom.y === pto.y && pfrom.y === ptocheck.y) {
+		const min = Math.min(pfrom.x, pto.x);
+		const max = Math.max(pfrom.x, pto.x);
+		if (ptocheck.x >= min && ptocheck.x <= max) {
+			return true;
+		}
+	}
+	if (pfrom.x === pto.x && pfrom.x === ptocheck.x) {
+		const min = Math.min(pfrom.y, pto.y);
+		const max = Math.max(pfrom.y, pto.y);
+		if (ptocheck.y >= min && ptocheck.y <= max) {
+			return true;
+		}
+	}
+	return false;
+}
+
+const distance = (p1, p2) => Math.abs(p2.x - p1.x) + Math.abs(p2.y - p1.y);
+
+let pathStepsToIts = [[], []];
+for (let i = 0; i < its.length; i++) {
+	pathStepsToIts[0].push(0);
+	pathStepsToIts[1].push(0);
+}
+
+for (let i = 0; i < pts.length; i++) {
+	let step = 0;
+	let cr = new pt(0, 0);
+	for (let j = 0; j < pts[i].length; j++) {
+		const pcr = new pt(cr.x, cr.y);
+		move(cr, getDir(path[i][j]), getValue(path[i][j]));
+		for (let k = 0; k < its.length; k++) {
+			if (overlap(pcr, cr, its[k])) {
+				pathStepsToIts[i][k] = step + distance(pcr, its[k]);
+			}
+		}
+		step += getValue(path[i][j]);
+	}
+}
+
+let pathStepsForEachIts = [];
+for (let i = 0; i < its.length; i++) {
+	pathStepsForEachIts.push(pathStepsToIts[0][i] + pathStepsToIts[1][i]);
+}
+
+console.log(Math.min(...pathStepsForEachIts));
+
 const SCALER = 0.04;
 const ctx = document.querySelector('canvas').getContext('2d');
 function loop() {
@@ -90,17 +139,6 @@ function loop() {
 		ctx.fillStyle = 'yellow';
 		ctx.fill();
 	}
-	const closestIts = its[closestIndex];
-	ctx.beginPath();
-	ctx.moveTo(o.x + closestIts.x * SCALER, o.y + closestIts.y * SCALER);
-	ctx.lineTo(o.x, o.y);
-	ctx.strokeStyle = 'yellow';
-	ctx.stroke();
-	ctx.textAlign = 'center';
-	ctx.textBaseline = 'middle';
-	ctx.font = '18px sans-serif';
-	ctx.fillStyle = 'white';
-	ctx.fillText(closestDistance, o.x + closestIts.x * SCALER / 2, o.y + closestIts.y * SCALER / 2);
 	window.requestAnimationFrame(loop);
 }
 
