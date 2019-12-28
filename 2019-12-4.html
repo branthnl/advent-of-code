@@ -3,10 +3,12 @@ function isPass(s) {
 	let haveDouble = false;
 	let neverDecrease = true;
 	let tempS = '';
+	let doubleS = [];
 	for (let i = 0; i < s.length; i++) {
+		doubleS.push(0);
 		if (i < s.length - 1) {
 			if (s[i] === s[i + 1]) {
-				haveDouble = true;
+				doubleS[i] = 1;
 			}
 		}
 		for (let j = 0; j < tempS.length; j++) {
@@ -16,6 +18,20 @@ function isPass(s) {
 			}
 		}
 		tempS += s[i];
+	}
+	for (let i = 0; i < doubleS.length; i++) {
+		if (doubleS[i] === 1) {
+			if (i === 0) {
+				if (doubleS[0] != doubleS[1]) {
+					haveDouble = true;
+				}
+			}
+			else if (i > 0 && i < doubleS.length - 1) {
+				if (doubleS[i] != doubleS[i - 1] && doubleS[i] != doubleS[i + 1]) {
+					haveDouble = true;
+				}
+			}
+		}
 	}
 	return haveDouble && neverDecrease;
 }
