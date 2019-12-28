@@ -1,0 +1,130 @@
+<script>
+const program = [3,8,1001,8,10,8,105,1,0,0,21,34,59,68,85,102,183,264,345,426,99999,3,9,101,3,9,9,102,3,9,9,4,9,99,3,9,1002,9,4,9,1001,9,2,9,1002,9,2,9,101,5,9,9,102,5,9,9,4,9,99,3,9,1001,9,4,9,4,9,99,3,9,101,3,9,9,1002,9,2,9,1001,9,5,9,4,9,99,3,9,1002,9,3,9,1001,9,5,9,102,3,9,9,4,9,99,3,9,1001,9,1,9,4,9,3,9,1001,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,102,2,9,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,101,1,9,9,4,9,99,3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,1,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1002,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,101,2,9,9,4,9,99,3,9,1001,9,1,9,4,9,3,9,101,1,9,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1001,9,1,9,4,9,3,9,102,2,9,9,4,9,3,9,1001,9,1,9,4,9,99,3,9,1002,9,2,9,4,9,3,9,101,1,9,9,4,9,3,9,1001,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,2,9,9,4,9,99,3,9,1001,9,1,9,4,9,3,9,1002,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,101,1,9,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,102,2,9,9,4,9,3,9,101,2,9,9,4,9,99];
+
+const copy = (p) => {
+	let c = [];
+	for (let i = 0; i < p.length; i++) {
+		c.push(p[i]);
+	}
+	return c;
+};
+
+const x0 = (x) => x || 0;
+
+function run(program, phase, input) {
+	const get = (value, mode) => (mode > 0? value : program[value]);
+	let output = 0;
+	let step = 4;
+	let count = 0;
+	let inputCount = 0;
+	for (let i = 0; i < program.length; i += step) {
+
+		let A, B, C, DE;
+		const it = '' + program[i];
+		DE = x0(it[it.length - 2]) + x0(it[it.length - 1]);
+		C = x0(it[it.length - 3]);
+		B = x0(it[it.length - 4]);
+		A = x0(it[it.length - 5]);
+
+		let P1, P2, O;
+		P1 = get(program[i + 1], C);
+		P2 = get(program[i + 2], B);
+		O = program[i + 3];
+
+		switch (DE) {
+			case '01':
+				program[O] = P1 + P2;
+				step = 4;
+				break;
+			case '02':
+				program[O] = P1 * P2;
+				step = 4;
+				break;
+			case '03':
+				O = program[i + 1];
+				program[O] = inputCount > 0? input : phase;
+				inputCount++;
+				step = 2;
+				break;
+			case '04':
+				output = P1;
+				step = 2;
+				break;
+			case '05':
+				if (P1 != 0) {
+					i = P2;
+					step = 0;
+				}
+				else {
+					step = 3;
+				}
+				break;
+			case '06':
+				if (P1 === 0) {
+					i = P2;
+					step = 0;
+				}
+				else {
+					step = 3;
+				}
+				break;
+			case '07':
+				program[O] = (P1 < P2? 1 : 0);
+				step = 4;
+				break;
+			case '08':
+				program[O] = (P1 === P2? 1 : 0);
+				step = 4;
+				break;
+			default:
+				count++;
+				break;
+		}
+		if (count > 0) {
+			break;
+		}
+	}
+	return output;
+}
+
+function circuit(s1, s2, s3, s4, s5) {
+	const o1 = run(copy(program), s1, 0);
+	const o2 = run(copy(program), s2, o1);
+	const o3 = run(copy(program), s3, o2);
+	const o4 = run(copy(program), s4, o3);
+	const o5 = run(copy(program), s5, o4);
+	return o5;
+}
+
+let sequences = [];
+
+for (let i1 = 0; i1 <= 4; i1++) {
+	for (let i2 = 0; i2 <= 4; i2++) {
+		for (let i3 = 0; i3 <= 4; i3++) {
+			for (let i4 = 0; i4 <= 4; i4++) {
+				for (let i5 = 0; i5 <= 4; i5++) {
+					const s = [i1, i2, i3, i4, i5];
+					if (s.filter((x, i) => s.indexOf(x) === i).length === s.length) {
+						sequences.push(s);
+					}
+				}
+			}
+		}
+	}
+}
+
+let phaseSetting = '';
+let highestSignal = 0;
+
+for (let i = 0; i < sequences.length; i++) {
+	const s = sequences[i];
+	const out = circuit(s[0], s[1], s[2], s[3], s[4]);
+	if (out > highestSignal) {
+		highestSignal = out;
+		phaseSetting = s.join(',');
+	}
+}
+
+console.log(phaseSetting);
+console.log(highestSignal);
+</script>
