@@ -32,12 +32,39 @@ for (let i = 0; i < program.length; i += step) {
 			step = 4;
 			break;
 		case '03':
-			program[program[i + 1]] = 1;
+			O = program[i + 1];
+			program[O] = 5;
 			step = 2;
 			break;
 		case '04':
 			output = P1;
 			step = 2;
+			break;
+		case '05':
+			if (P1 != 0) {
+				i = P2;
+				step = 0;
+			}
+			else {
+				step = 3;
+			}
+			break;
+		case '06':
+			if (P1 === 0) {
+				i = P2;
+				step = 0;
+			}
+			else {
+				step = 3;
+			}
+			break;
+		case '07':
+			program[O] = (P1 < P2? 1 : 0);
+			step = 4;
+			break;
+		case '08':
+			program[O] = (P1 === P2? 1 : 0);
+			step = 4;
 			break;
 		default:
 			count++;
