@@ -14,18 +14,26 @@ for (let i = 0; i < Math.floor(image.length / dimension.size()); i++) {
 	layers.push(image.substr(dimension.size() * i, dimension.size()));
 }
 
-const amountOfDigitInText = (text, digit) => text.length - text.split(digit).join('').length;
-
-let fewest0Digits = amountOfDigitInText(layers[0], 0);
-let fewest0DigitsIndex = 0;
-for (let i = 1; i < layers.length; i++) {
-	const  a = amountOfDigitInText(layers[i], 0);
-	if (a < fewest0Digits) {
-		fewest0Digits = a;
-		fewest0DigitsIndex = i;
+let decodedImage = '';
+for (let i = 0; i < dimension.size(); i++) {
+	let firstVisible = '2';
+	for (let j = 0; j < layers.length; j++) {
+		if (layers[j][i] !== firstVisible) {
+			firstVisible = layers[j][i];
+			break;
+		}
 	}
+	decodedImage += firstVisible;
 }
 
-const l = layers[fewest0DigitsIndex];
-console.log(amountOfDigitInText(l, 1) * amountOfDigitInText(l, 2));
+function draw(img) {
+	let i = [];
+	img = img.split('').map((x) => +x > 0? '\x1b[47m ' : '\x1b[40m ');
+	while (img.length) {
+		i.push(img.splice(0, dimension.w));
+	}
+	return i.join('\n');
+}
+
+console.log(draw(decodedImage));
 </script>
