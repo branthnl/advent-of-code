@@ -305,7 +305,7 @@ const lights = [];
 for (let i = 0; i < 1000; i++) {
 	lights.push([]);
 	for (let j = 0; j < 1000; j++) {
-		lights[i].push(false);
+		lights[i].push(0);
 	}
 }
 
@@ -322,9 +322,9 @@ const run = (n) => {
 		for (let x = from[0]; x <= to[0]; x++) {
 			for (let y = from[1]; y <= to[1]; y++) {
 				switch (instruction) {
-					case 'turnon': lights[x][y] = true; break;
-					case 'turnoff': lights[x][y] = false; break;
-					case 'toggle': lights[x][y] = !lights[x][y]; break;
+					case 'turnon': lights[x][y] += 1; break;
+					case 'turnoff': lights[x][y] = Math.max(lights[x][y] - 1, 0); break;
+					case 'toggle': lights[x][y] += 2; break;
 				}
 			}
 		}
@@ -333,10 +333,11 @@ const run = (n) => {
 
 run(puzzle);
 
-const lit = lights.map(x => x.filter(y => y === true).length);
 let total = 0;
-for (let i = 0; i < lit.length; i++) {
-	total += lit[i];
+for (let i = 0; i < lights.length; i++) {
+	for (let j = 0; j < lights[i].length; j++) {
+		total += lights[i][j];
+	}
 }
 console.log(total);
 
