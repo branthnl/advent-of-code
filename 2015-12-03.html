@@ -6,10 +6,18 @@ const getHouseWithAtLeastOnePresent = (n) => {
 	const E = '>';
 	const S = 'v';
 	const W = '<';
-	let x = 0;
-	let y = 0;
+	let s = {
+		x: 0,
+		y: 0
+	};
+	let r = {
+		x: 0,
+		y: 0
+	};
 	let houses = [];
-	for (let i = 0; i < n.length; i++) {
+	const move = (p, i) => {
+		let x = p.x;
+		let y = p.y;
 		let count = 0;
 		for (let j = 0; j < houses.length; j++) {
 			if (houses[j].x === x && houses[j].y === y) {
@@ -21,12 +29,15 @@ const getHouseWithAtLeastOnePresent = (n) => {
 		if (count === 0) {
 			houses.push({ x, y, present: 1 });
 		}
-		switch (n[i]) {
-			case N: y++; break;
-			case E: x++; break;
-			case S: y--; break;
-			case W: x--; break;
+		switch (i) {
+			case N: p.y++; break;
+			case E: p.x++; break;
+			case S: p.y--; break;
+			case W: p.x--; break;
 		}
+	};
+	for (let i = 0; i < n.length; i++) {
+		move(i % 2 === 0? s : r, n[i]);
 	}
 	return houses.length;
 };
