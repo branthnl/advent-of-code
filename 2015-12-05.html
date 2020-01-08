@@ -1000,28 +1000,28 @@ hdvdbtvfpdrejenu,\
 gtjscincktlwwkkf,\
 wtebigbaythklkbd';
 
-const doesNotContainForbiddenStrings = (s) => {
-	const forbiddenStrings = ['ab', 'cd', 'pq', 'xy'];
-	for (let i = 0; i < forbiddenStrings.length; i++) {
-		if (s.includes(forbiddenStrings[i])) {
-			return false;
-		}
-	}
-	return true;
-};
-const containsAtLeastThreeVowels = (s) => {
-	const vowels = 'aeiou';
-	let count = 0;
-	for (let i = 0; i < s.length; i++) {
-		if (vowels.includes(s[i])) {
-			count++;
-		}
-	}
-	return count >= 3;
-};
-const containsAtLeastOneLetterAppearTwice = (s) => {
+const haveAPairOfTwoLetterThatAppearsAtLeastTwice = (s) => {
+	let pairs = [];
 	for (let i = 0; i < s.length - 1; i++) {
-		if (s[i] === s[i + 1]) {
+		pairs.push({
+			i: i,
+			v: s[i] + s[i + 1]
+		});
+	}
+	for (let i = 0; i < pairs.length; i++) {
+		for (let j = 0; j < pairs.length; j++) {
+			if (pairs[i].v === pairs[j].v) {
+				if (Math.abs(pairs[i].i - pairs[j].i) >= 2) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+};
+const haveAtLeastOneLetterRepeatsWithOneBetween = (s) => {
+	for (let i = 0; i < s.length - 2; i++) {
+		if (s[i] === s[i + 2]) {
 			return true;
 		}
 	}
@@ -1032,11 +1032,9 @@ const getNiceStringsAmount = (n) => {
 	const nice = [];
 	for (let i = 0; i < m.length; i++) {
 		const s = m[i];
-		if (doesNotContainForbiddenStrings(s)) {
-			if (containsAtLeastThreeVowels(s)) {
-				if (containsAtLeastOneLetterAppearTwice(s)) {
-					nice.push(s);
-				}
+		if (haveAPairOfTwoLetterThatAppearsAtLeastTwice(s)) {
+			if (haveAtLeastOneLetterRepeatsWithOneBetween(s)) {
+				nice.push(s);
 			}
 		}
 	}
