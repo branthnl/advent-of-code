@@ -1002,17 +1002,21 @@ const puzzle = '29x13x26,\
 
 const calculateWrappingPaper = (n) => {
 	let total = 0;
+	let totalRibbon = 0;
 	const m = n.split(',');
 	for (let i = 0; i < m.length; i++) {
-		const o = m[i].split('x');
+		const o = m[i].split('x').map(x => +x);
 		const area = [];
 		area.push(+o[0] * +o[1]);
 		area.push(+o[1] * +o[2]);
 		area.push(+o[2] * +o[0]);
 		const extra = Math.min(...area);
 		total += 2 * area[0] + 2 * area[1] + 2 * area[2] + extra;
+		const min = [...o];
+		min.splice(min.indexOf(Math.max(...min)), 1);
+		totalRibbon += 2 * (min[0] + min[1]) + o[0] * o[1] * o[2];
 	}
-	return total;
+	return { total, totalRibbon };
 };
 
 console.log(calculateWrappingPaper(puzzle));
