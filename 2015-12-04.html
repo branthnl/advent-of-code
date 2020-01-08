@@ -2,10 +2,10 @@
 <script>
 
 const getNumber = (n) => {
-	const startWithFiveZeroes = (s) => s.substr(0, 5) === '00000';
+	const startWithSixZeroes = (s) => s.substr(0, 6) === '000000';
 	let hash = '';
 	let number = -1;
-	while (!startWithFiveZeroes(hash)) {
+	while (!startWithSixZeroes(hash)) {
 		number++;
 		hash = md5(n + number);
 	}
