@@ -6,13 +6,17 @@ const DOWN_ONE_FLOOR = ')';
 
 const getFloor = (n) => {
 	let floor = 0;
+	let causeOfEnterBasement = -1;
 	for (let i = 0; i < n.length; i++) {
 		switch (n[i]) {
 			case UP_ONE_FLOOR: floor++; break;
 			case DOWN_ONE_FLOOR: floor--; break;
 		}
+		if (floor === -1 && causeOfEnterBasement === -1) {
+			causeOfEnterBasement = i + 1;
+		}
 	}
-	return floor;
+	return { floor, causeOfEnterBasement };
 };
 
 console.log(getFloor(puzzle));
